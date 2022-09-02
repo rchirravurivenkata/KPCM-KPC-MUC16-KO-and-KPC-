@@ -1,0 +1,9 @@
+### RNA-seq read alignment using GRCM38 genome 
+
+files=`ls *R1_001.fastq.gz`
+for i in $files; do nam=`basename $i "R1_001.fastq.gz"`; hisat2 -x ~/Documents/grcm38/genome -1 $i -2 ${nam}R2_001.fastq.gz -S temp.sam;
+samtools view -S -b temp.sam > temp.bam; samtools sort temp.bam -o ${nam}_sorted.bam; rm temp.sam; done
+
+### Gene count assignment using featureCounts using Gencode vM27 annotations
+files=`ls *_sorted.bam`
+featureCounts  -O -M  -g 'gene_name' -a ~/Documents/gencode.vM27.annotation -F GTF -o featurecounts.txt $files
